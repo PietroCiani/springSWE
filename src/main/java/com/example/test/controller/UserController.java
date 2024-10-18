@@ -26,17 +26,4 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/signup")
-    public String homePage(Model model){
-        model.addAttribute("user", new User());
-        return "signup";
-    }
-
-    @PostMapping("/save")
-    public String saveUser(User user) {
-        repo.save(user);
-        //TODO: check if user have been saved correctly
-        return "login";
-    }
-
 }
