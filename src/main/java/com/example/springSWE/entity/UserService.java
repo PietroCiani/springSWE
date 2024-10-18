@@ -1,6 +1,6 @@
-package com.example.test.entity;
+package com.example.springSWE.entity;
 
-import com.example.test.dao.UserRepository;
+import com.example.springSWE.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

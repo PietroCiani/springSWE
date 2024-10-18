@@ -1,6 +1,6 @@
-package com.example.test.dao;
+package com.example.springSWE.dao;
 
-import com.example.test.entity.User;
+import com.example.springSWE.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

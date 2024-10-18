@@ -1,4 +1,4 @@
-package com.example.test.entity;
+package com.example.springSWE.entity;
 
 import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

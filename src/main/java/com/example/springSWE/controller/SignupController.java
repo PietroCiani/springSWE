@@ -1,7 +1,7 @@
-package com.example.test.controller;
+package com.example.springSWE.controller;
 
-import com.example.test.entity.User;
-import com.example.test.entity.UserService;
+import com.example.springSWE.entity.User;
+import com.example.springSWE.entity.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
