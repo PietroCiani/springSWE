@@ -12,7 +12,6 @@ public class UserController {
     @Autowired
     private UserRepository repo;
 
-
     @GetMapping("/")
     public String home() {
         return "home";
