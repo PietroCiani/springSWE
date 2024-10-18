@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-  <title>Spring Security Example </title>
+  <title>Login </title>
 </head>
 <body>
 <div th:if="${param.error}">
-  Invalid username and password.
+  Invalid username and/or password.
 </div>
 <div th:if="${param.logout}">
   You have been logged out.
