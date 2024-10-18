@@ -3,7 +3,10 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
-    <title>AppName</title>
+    <title>SpringApp</title>
+
+</head>
+<body>
     <h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
     <p><a th:href="@{/login}">Login</a></p>
     <p>or</p>
@@ -11,8 +14,5 @@
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out"/>
     </form>
-</head>
-<body>
-
 </body>
 </html>
