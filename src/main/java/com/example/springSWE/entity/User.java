@@ -1,7 +1,6 @@
 package com.example.springSWE.entity;
 
 import jakarta.persistence.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name="users")

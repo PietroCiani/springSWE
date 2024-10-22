@@ -15,15 +15,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        .orElseThrow(() -> new UsernameNotFoundException("User(name) not found"));
 
         UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(user.getUsername());
-        builder.password(user.getPassword()); // Password is encrypted
-        builder.roles("USER");  // Set roles (for simplicity, we're using "USER")
-
+        builder.password(user.getPassword()); // pw is already encrypted
+        builder.roles("USER");
         return builder.build();
     }
 }

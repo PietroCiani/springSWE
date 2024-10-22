@@ -16,8 +16,6 @@ public class SignupController {
 
     @GetMapping
     public String showSignupPage(){
-        //model.addAttribute("user", new User());
-        //return "redirect:/save";
         return "signup";
     }
 
