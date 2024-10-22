@@ -4,15 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>SpringApp</title>
-
 </head>
 <body>
-    <h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
-    <p><a th:href="@{/login}">Login</a></p>
-    <p>or</p>
-    <p>Click <a th:href="@{/signup}">here</a> to register.</p>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign Out"/>
-    </form>
+    <!-- Content for authenticated users -->
+    <div sec:authorize="isAuthenticated()">
+        <h1 th:inline="text">Welcome, [[${#authentication.name}]]!</h1>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+    </div>
+
+    <!-- Content for anonymous users -->
+    <div sec:authorize="isAnonymous()">
+        <h1>Welcome to SpringApp!</h1>
+        <p><a th:href="@{/login}">Login</a></p>
+        <p>or</p>
+        <p>Click <a th:href="@{/signup}">here</a> to register.</p>
+    </div>
 </body>
 </html>
