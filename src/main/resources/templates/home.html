@@ -1,25 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-<head>
-    <meta charset="UTF-8">
-    <title>SpringApp</title>
+<head th:replace="~{base :: head}">
+    <title>Home</title>
 </head>
-<body>
-    <!-- Content for authenticated users -->
-    <div sec:authorize="isAuthenticated()">
-        <h1 th:inline="text">Welcome, [[${#authentication.name}]]!</h1>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Include navbar -->
+    <div th:replace="~{base :: navbar}"></div>
+
+    <!-- Main content -->
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div sec:authorize="isAuthenticated()">
+                            <h2 class="card-title text-center mb-4">Welcome to SpringApp!</h2>
+                            <p class="text-center">Hi [[${#authentication.name}]]!</p>
+                        </div>
+                        
+                        <div sec:authorize="isAnonymous()">
+                            <h2 class="card-title text-center mb-4">Welcome to SpringApp!</h2>
+                            <p class="text-center">Please <a th:href="@{/login}">log in</a> or <a th:href="@{/signup}">sign up</a> to continue.</p>
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                <a class="btn btn-primary" th:href="@{/login}">Login</a>
+                                <a class="btn btn-outline-primary" th:href="@{/signup}">Sign Up</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Content for anonymous users -->
-    <div sec:authorize="isAnonymous()">
-        <h1>Welcome to SpringApp!</h1>
-        <p><a th:href="@{/login}">Login</a></p>
-        <p>or</p>
-        <p>Click <a th:href="@{/signup}">here</a> to register.</p>
-    </div>
+    <!-- Include footer - push to bottom -->
+    <div class="mt-auto" th:replace="~{base :: footer}"></div>
 </body>
 </html>

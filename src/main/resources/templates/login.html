@@ -1,20 +1,55 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-<head>
-  <title>Login</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{base :: head}">
+    <title>Login</title>
 </head>
-<body>
-    <div th:if="${param.error}">
-    Invalid username or password.
+<body class="d-flex flex-column min-vh-100">
+    <div th:replace="~{base :: navbar}"></div>
+
+    <!-- Main content -->
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">Login</h2>
+                        
+                        <!-- Alert messages -->
+                        <div th:if="${param.error}" class="alert alert-danger">
+                            Invalid username or password.
+                        </div>
+                        <div th:if="${param.logout}" class="alert alert-success">
+                            You have been logged out.
+                        </div>
+                        
+                        <!-- Login form -->
+                        <form th:action="@{/login}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a th:href="@{/signup}">Sign up</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div th:if="${param.logout}">
-    You have been logged out.
-    </div>
-    <form th:action="@{/login}" method="post">
-        <div><label for="username"> Username <input type="text" id="username" name="username" required/> </label></div>
-        <div><label for="password"> Password <input type="password" id="password" name="password" required/> </label></div>
-        <div><input type="submit" value="Sign In"/></div>
-    </form>
+
+    <!-- Include footer - push to bottom -->
+    <div class="mt-auto" th:replace="~{base :: footer}"></div>
 </body>
 </html>
-
