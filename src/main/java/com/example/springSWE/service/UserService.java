@@ -1,6 +1,8 @@
-package com.example.springSWE.entity;
+package com.example.springSWE.service;
 
 import com.example.springSWE.dao.UserRepository;
+import com.example.springSWE.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,8 @@
 package com.example.springSWE.controller;
 
-import com.example.springSWE.entity.User;
-import com.example.springSWE.entity.UserService;
+import com.example.springSWE.model.User;
+import com.example.springSWE.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

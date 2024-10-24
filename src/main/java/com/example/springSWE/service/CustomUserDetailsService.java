@@ -1,7 +1,8 @@
 package com.example.springSWE.service;
 
-import com.example.springSWE.entity.User;
 import com.example.springSWE.dao.UserRepository;
+import com.example.springSWE.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

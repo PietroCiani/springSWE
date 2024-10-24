@@ -1,4 +1,4 @@
-package com.example.springSWE.entity;
+package com.example.springSWE.model;
 
 import jakarta.persistence.*;
 
