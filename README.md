@@ -1,7 +1,7 @@
-# 
+# BarkPark
 
 ## Overview
-This project is a Java Spring application designed to manage schedules for dog parks. It allows users to view, create, and manage park schedules efficiently.
+This project is a Java Spring application designed to manage schedules for dog parks and any other kind of shared space. It allows users to view, create and manage reservations efficiently.
 
 ## Design
 - [ ] Class diagram
