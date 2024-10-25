@@ -1,6 +1,7 @@
 package com.example.springSWE.controller;
 
-import com.example.springSWE.service.UserService;
+import com.example.springSWE.service.ParkService;
+import com.example.springSWE.service.ParkService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,7 @@ import org.springframework.ui.Model;
 public class ParkController {
 	
 	@Autowired
-    private UserService userService;
+    private ParkService parkService;
 
 	@GetMapping
 	public String showParksPage() {
