@@ -5,6 +5,7 @@ import com.example.springSWE.model.Park;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ParkService {
@@ -18,5 +19,8 @@ public class ParkService {
     public boolean checkParkExists(String address) {
 		return parkRepository.findByAddress(address).isPresent();
     }
-}
 
+	public List<Park> findAllParks() {
+		return parkRepository.findAll();
+	}
+}
