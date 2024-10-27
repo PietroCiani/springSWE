@@ -1,7 +1,7 @@
 package com.example.springSWE.service;
 
-import com.example.springSWE.dao.ParkRepository;
 import com.example.springSWE.model.Park;
+import com.example.springSWE.dao.ParkRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,5 +22,9 @@ public class ParkService {
 
 	public List<Park> findAllParks() {
 		return parkRepository.findAll();
+	}
+
+	public Park findParkById(Long id) {
+		return parkRepository.findById(id).orElse(null);
 	}
 }

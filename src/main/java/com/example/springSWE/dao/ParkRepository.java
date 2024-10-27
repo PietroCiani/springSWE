@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface ParkRepository extends JpaRepository <Park, Integer> {
 	Optional<Park> findByAddress(String address);
+	Optional<Park> findById(Long id);
 }

@@ -5,18 +5,15 @@
     <title>Home</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <!-- Include navbar -->
     <div th:replace="~{base :: navbar}"></div>
 
-    <!-- Main content -->
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
                         <div sec:authorize="isAuthenticated()">
-                            <h2 class="card-title text-center mb-4">Welcome to SpringApp!</h2>
-                            <p class="text-center">Hi [[${#authentication.name}]]!</p>
+                            <h2 class="card-title text-center mb-4">Welcome [[${#authentication.name}]]!</h2>
                         </div>
                         
                         <div sec:authorize="isAnonymous()">
@@ -33,7 +30,6 @@
         </div>
     </div>
 
-    <!-- Include footer - push to bottom -->
     <div class="mt-auto" th:replace="~{base :: footer}"></div>
 </body>
 </html>
