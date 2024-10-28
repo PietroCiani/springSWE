@@ -39,4 +39,12 @@ public class Reservation {
 				", duration='" + duration + '\'' +
 				'}';
 	}
+
+	public LocalTime getStartTime() {
+		return time;
+	}
+
+	public LocalTime getEndTime() {
+		return time.plusMinutes(duration);
+	}
 }

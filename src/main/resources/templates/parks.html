@@ -18,7 +18,7 @@
                             <p class="card-text" th:text="${park.address}">Park Address</p>
                         </div>
                         <div class="card-footer">
-                            <a th:href="@{/reservation/schedule(parkId=${park.id})}" class="btn btn-primary">Reserve</a>
+                            <a th:href="@{/schedule(parkId=${park.id})}" class="btn btn-primary">Reserve</a>
                         </div>
                     </div>
                 </div>
