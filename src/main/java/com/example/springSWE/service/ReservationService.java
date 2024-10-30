@@ -1,17 +1,12 @@
 package com.example.springSWE.service;
 
-import com.example.springSWE.model.Park;
 import com.example.springSWE.model.Reservation;
 import com.example.springSWE.dao.ReservationRepository;
 
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 @Service
