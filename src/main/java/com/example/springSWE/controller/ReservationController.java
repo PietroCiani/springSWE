@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,28 +33,32 @@ public class ReservationController {
 	private UserService userService;
 
 	@PostMapping("/reservation/create")
-		public String createReservation(@RequestParam("parkId") Long parkId,
-                               @RequestParam("time") @DateTimeFormat(pattern = "HH:mm") LocalTime time,
-                               @RequestParam("duration") int durationInMinutes,
-                               Principal principal) {
-		// Fetch the park based on the parkId
-		Park park = parkService.findParkById(parkId);
-		
-		User user = userService.getUserByUsername(principal.getName());
-		
-		// Create a new reservation
-		Reservation reservation = new Reservation();
-		reservation.setPark(park);
-		reservation.setUser(user);
-		reservation.setTime(time);
-		reservation.setDuration(durationInMinutes);
-		
-		// Save the reservation
-		reservationService.saveReservation(reservation);
-		
-		// Redirect the user to the parks page or the reservation page
-		return "redirect:/parks";
-	}
+	public String createReservation(@RequestParam("parkId") Long parkId,
+							@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+							@RequestParam("time") @DateTimeFormat(pattern = "HH:mm") LocalTime time,
+							@RequestParam("duration") int durationInMinutes,
+							Principal principal,
+							RedirectAttributes redirectAttributes) {
+		try {
+			Park park = parkService.findParkById(parkId);
+			User user = userService.getUserByUsername(principal.getName());
+			Reservation reservation = new Reservation();
+			reservation.setPark(park);
+			reservation.setUser(user);
+			reservation.setDate(date);
+			reservation.setTime(time);
+			reservation.setDuration(durationInMinutes);
 
-	
+			// TODO: Add validation logic here to check for overlapping reservations
+			
+			reservationService.saveReservation(reservation);
+			redirectAttributes.addFlashAttribute("success", "Reservation successfully created!");
+			return "redirect:/parks";
+
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", 
+            "Could not create reservation: " + e.getMessage());
+        	return "redirect:/reservation/schedule?parkId=" + parkId;
+		}
+	}
 }

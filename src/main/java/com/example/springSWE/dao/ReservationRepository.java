@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+    List<Reservation> findByParkId(Long parkId);
     List<Reservation> findByParkIdAndDate(Long parkId, LocalDate date);
     List<Reservation> findByParkIdAndDateAndTimeAfter(
         @Param("parkId") Long parkId,

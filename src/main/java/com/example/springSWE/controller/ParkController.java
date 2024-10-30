@@ -8,6 +8,7 @@ import com.example.springSWE.service.ReservationService;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -30,19 +31,20 @@ public class ParkController {
 	}
 
 	@GetMapping("/schedule")
-	public String viewParkSchedule(@RequestParam("parkId") Long parkId, Model model) {
-        Park park = parkService.findParkById(parkId);
+	public String getAllReservationsForPark(@RequestParam("parkId") Long parkId, Model model) {
+		Park park = parkService.findParkById(parkId);
 
-		// res. current day for this park
-		List<Reservation> reservations = reservationService.getReservationsByParkAndDate(parkId, java.time.LocalDate.now());
-		
-		// Add the park and reservations to the model
+		List<Reservation> reservations = reservationService.getAllReservationsByPark(parkId);
+
 		model.addAttribute("park", park);
 		model.addAttribute("reservations", reservations);
-    
-    return "schedule";
-    }
-
-	//TODO: @PostMapping
+		return "schedule";
+	}
+	/*
+	public String viewParkSchedule(@RequestParam("parkId") Long parkId,
+								   @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+								   Model model) {
+        Park park = parkService.findParkById(parkId);
+    }*/
 
 }

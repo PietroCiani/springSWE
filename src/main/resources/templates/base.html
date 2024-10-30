@@ -32,9 +32,9 @@
                 <div class="d-flex">
                     <!-- Content for authenticated users -->
                     <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
-                        <span class="text-light me-3" th:inline="text">Welcome, [[${#authentication.name}]]!</span>
+                        <span class="text-light me-3" th:inline="text">[[${#authentication.name}]]</span>
                         <form th:action="@{/logout}" method="post" class="mb-0">
-                            <button type="submit" class="btn btn-outline-light">Sign Out</button>
+                            <button type="submit" class="btn btn-outline-light">Log Out</button>
                         </form>
                     </div>
                     

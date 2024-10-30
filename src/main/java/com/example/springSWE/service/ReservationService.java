@@ -23,10 +23,6 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}	
 
-	/* public List<LocalTime> getAvailableTimes(Long parkId, LocalDate date) {
-		List<Reservation> futureReservations = reservationRepository.findByParkIdAndDateAndTimeAfter(parkId, date, LocalTime.now());
-	} */
-
 	public List<Reservation> getFutureReservations(Long parkID, LocalDate date, LocalTime time) {
 		return reservationRepository.findByParkIdAndDateAndTimeAfter(parkID, date, time);
 		//FIXME: include ongoing reservation (started before LocalTime.now())
@@ -35,6 +31,10 @@ public class ReservationService {
 	public List<Reservation> getReservationsByParkAndDate(Long parkId, LocalDate date) {
 		return reservationRepository.findByParkIdAndDate(parkId, date);
     }
+
+	public List<Reservation> getAllReservationsByPark(Long parkId) {
+		return reservationRepository.findByParkId(parkId);
+	}
 
 	/*
     public static List<int[]> findAvailableSlots(List<int[]> transReservations, int maxTime) {
