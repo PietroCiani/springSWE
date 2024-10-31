@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.springSWE.model.Reservation;
+import com.example.springSWE.model.User;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.time.LocalTime;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByParkId(Long parkId);
+    List<Reservation> findByUserId(Long userId);
     List<Reservation> findByParkIdAndDate(Long parkId, LocalDate date);
     List<Reservation> findByParkIdAndDateAndStartTimeAfter(
         @Param("parkId") Long parkId,
@@ -20,6 +22,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     );
 
     @Query("SELECT r FROM Reservation r WHERE r.park.id = :parkID AND r.date = :date AND :startTime BETWEEN r.startTime AND r.endTime")
-    List<Reservation> findOngoingReservationByParkDateTime(@Param("parkID") Long parkID, @Param("date") LocalDate date, @Param("startTime") LocalTime startTime);
+    List<Reservation> findOngoingReservationByParkDateTime(@Param("parkID") Long parkID,
+        @Param("date") LocalDate date, @Param("startTime") LocalTime startTime
+    );
+
+    List<Reservation> findByUserAndDateAndStartTimeAfter(User userId, LocalDate date, LocalTime startTime);
     
 }

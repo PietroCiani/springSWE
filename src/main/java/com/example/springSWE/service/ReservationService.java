@@ -1,6 +1,7 @@
 package com.example.springSWE.service;
 
 import com.example.springSWE.model.Reservation;
+import com.example.springSWE.model.User;
 import com.example.springSWE.dao.ReservationRepository;
 
 import java.util.List;
@@ -41,6 +42,10 @@ public class ReservationService {
         reservations.sort(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime));
 		return reservations;
 	}
+
+    public List<Reservation> getFutureReservationsByUser(User user) {
+        return reservationRepository.findByUserAndDateAndStartTimeAfter(user, LocalDate.now(), LocalTime.now());
+    }
 
     public Optional<Reservation> getOngoingReservation(Long parkID, LocalDate date, LocalTime startTime) {
         List<Reservation> reservations = reservationRepository.findOngoingReservationByParkDateTime(parkID, date, startTime);

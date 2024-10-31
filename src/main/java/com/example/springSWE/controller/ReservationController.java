@@ -7,6 +7,9 @@ import com.example.springSWE.service.ParkService;
 import com.example.springSWE.service.ReservationService;
 import com.example.springSWE.service.UserService;
 
+import org.springframework.ui.Model;
+
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,15 @@ public class ReservationController {
 
 	@Autowired
 	private UserService userService;
+
+	@GetMapping("/reservations")
+	public String showReservations(Principal principal, Model model) {
+		User user = userService.getUserByUsername(principal.getName());
+		List<Reservation> reservations = reservationService.getFutureReservationsByUser(user);
+		model.addAttribute("reservations", reservations);
+
+		return "reservations";
+	}
 
 	@PostMapping("/reservation/create")
 	public String createReservation(@RequestParam("parkId") Long parkId,
