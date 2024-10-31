@@ -18,7 +18,9 @@ public class Reservation {
     
     private LocalDate date;
 
-	private LocalTime time;
+	private LocalTime startTime;
+
+	private LocalTime endTime;
 
 	private Integer duration;
 
@@ -35,16 +37,35 @@ public class Reservation {
 		return "Reservation{" +
 				"id=" + id +
 				", date='" + date + '\'' +
-				", startTime='" + time + '\'' +
+				", startTime='" + startTime + '\'' +
+				", endTime='" + endTime + '\'' +
 				", duration='" + duration + '\'' +
 				'}';
 	}
 
 	public LocalTime getStartTime() {
-		return time;
+		return startTime;
 	}
 
 	public LocalTime getEndTime() {
-		return time.plusMinutes(duration);
+		endTime = startTime.plusMinutes(duration);
+		return endTime;
+	}
+
+	public void setStartTime(LocalTime startTime) {
+		this.startTime = startTime;
+		setEndTime(startTime.plusMinutes(duration));
+	}
+
+    public Reservation() {
+    }
+
+	public Reservation(LocalDate date, LocalTime startTime, Integer duration, User user, Park park) {
+		this.date = date;
+		this.startTime = startTime;
+		this.endTime = startTime.plusMinutes(duration);
+		this.duration = duration;
+		this.user = user;
+		this.park = park;
 	}
 }

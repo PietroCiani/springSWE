@@ -27,8 +27,8 @@
                             <tbody>
                                 <tr th:each="reservation : ${reservations}">
                                     <td th:text="${reservation.date}"></td>
-                                    <td th:text="${reservation.time}"></td>
-                                    <td th:text="${#temporals.format(reservation.time.plusMinutes(reservation.duration), 'HH:mm')}"></td>
+                                    <td th:text="${reservation.startTime}"></td>
+                                    <td th:text="${reservation.endTime}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -37,16 +37,21 @@
             </div>
 
             <div class="col-md-2">
+                <!-- FIXME: prevent users to reserve an already booked time -->
                 <form th:action="@{/reservation/create}" method="post">
                     <input type="hidden" name="parkId" th:value="${park.id}">
                     <div class="form-group mb-3">
+                        <!-- FIXME: default at today -->
                         <label for="date">Date:</label>
                         <input type="date" class="form-control" id="date" name="date" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="time">Start Time:</label>
-                        <input type="time" class="form-control" id="time" name="time" required>
+                        <!-- TODO: add a "Next Available" button to select next available time -->
+                        <!-- FIXME: allow users to reserve only in minutes multiple of 5 (eg: xx:00, xx:05, xx:10, etc...) -->
+                        <label for="startTime">Start Time:</label>
+                        <input type="time" class="form-control" id="startTime" name="startTime" required>
                     </div>
+                     
                     <div class="form-group mb-3">
                         <label for="duration">Duration:</label>
                         <select class="form-control" id="duration" name="duration" required>

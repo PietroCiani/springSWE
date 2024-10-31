@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
+import java.util.Comparator;
 
 @Service
 public class ReservationService {
@@ -18,19 +20,33 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}	
 
-	public List<Reservation> getFutureReservations(Long parkID, LocalDate date, LocalTime time) {
-		return reservationRepository.findByParkIdAndDateAndTimeAfter(parkID, date, time);
-		//FIXME: include ongoing reservation (started before LocalTime.now())
-	}
+	public List<Reservation> getFutureReservations(Long parkID, LocalDate date, LocalTime startTime) {
+        List<Reservation> reservations = reservationRepository.findByParkIdAndDateAndStartTimeAfter(parkID, date, startTime);
+        
+        Optional<Reservation> ongoing = getOngoingReservation(parkID, LocalDate.now(), LocalTime.now());
+        ongoing.ifPresent(reservations::add);
+        
+        reservations.sort(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime));
+        
+        return reservations;
+    }
+    
 
-	public List<Reservation> getReservationsByParkAndDate(Long parkId, LocalDate date) {
-		return reservationRepository.findByParkIdAndDate(parkId, date);
+	public List<Reservation> getReservationsByParkAndDate(Long parkID, LocalDate date) {
+		return reservationRepository.findByParkIdAndDate(parkID, date);
     }
 
-	public List<Reservation> getAllReservationsByPark(Long parkId) {
-		return reservationRepository.findByParkId(parkId);
+	public List<Reservation> getAllReservationsByPark(Long parkID) {
+        List<Reservation> reservations = reservationRepository.findByParkId(parkID);
+        reservations.sort(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime));
+		return reservations;
 	}
 
+    public Optional<Reservation> getOngoingReservation(Long parkID, LocalDate date, LocalTime startTime) {
+        List<Reservation> reservations = reservationRepository.findOngoingReservationByParkDateTime(parkID, date, startTime);
+        return reservations.isEmpty() ? Optional.empty() : Optional.of(reservations.get(0));
+    }
+    
 	/*
     public static List<int[]> findAvailableSlots(List<int[]> transReservations, int maxTime) {
         // sort reservations by start time

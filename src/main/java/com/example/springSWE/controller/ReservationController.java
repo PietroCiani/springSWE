@@ -32,19 +32,14 @@ public class ReservationController {
 	@PostMapping("/reservation/create")
 	public String createReservation(@RequestParam("parkId") Long parkId,
 							@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-							@RequestParam("time") @DateTimeFormat(pattern = "HH:mm") LocalTime time,
+							@RequestParam("startTime") @DateTimeFormat(pattern = "HH:mm") LocalTime startTime,
 							@RequestParam("duration") int durationInMinutes,
 							Principal principal,
 							RedirectAttributes redirectAttributes) {
 		try {
 			Park park = parkService.findParkById(parkId);
 			User user = userService.getUserByUsername(principal.getName());
-			Reservation reservation = new Reservation();
-			reservation.setPark(park);
-			reservation.setUser(user);
-			reservation.setDate(date);
-			reservation.setTime(time);
-			reservation.setDuration(durationInMinutes);
+			Reservation reservation = new Reservation(date, startTime, durationInMinutes, user, park);
 
 			// TODO: Add validation logic here to check for overlapping reservations
 			
