@@ -47,6 +47,11 @@ public class ReservationService {
         return reservations.isEmpty() ? Optional.empty() : Optional.of(reservations.get(0));
     }
     
+    public void deleteReservation(Long reservationID) {
+        reservationRepository.deleteById(reservationID);
+    }
+
+
 	/*
     public static List<int[]> findAvailableSlots(List<int[]> transReservations, int maxTime) {
         // sort reservations by start time

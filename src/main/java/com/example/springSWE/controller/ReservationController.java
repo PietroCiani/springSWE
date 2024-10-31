@@ -53,4 +53,20 @@ public class ReservationController {
         	return "redirect:/reservation/schedule?parkId=" + parkId;
 		}
 	}
+
+	@PostMapping("/reservation/delete")
+	public String deleteReservation(@RequestParam("reservationId") Long reservationId,
+									@RequestParam("parkId") Long parkId,
+									RedirectAttributes redirectAttributes) {
+		try {
+			reservationService.deleteReservation(reservationId);
+			redirectAttributes.addFlashAttribute("success", "Reservation successfully deleted!");
+			return "redirect:/schedule?parkId=" + parkId;
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", 
+			"Could not delete reservation: " + e.getMessage());
+			return "redirect:/schedule?parkId=" + parkId;
+		}
+	}
+
 }

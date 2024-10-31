@@ -35,9 +35,14 @@
                                         <span th:if="${#authentication.name == reservation.user.username}">You</span>
                                         <span th:unless="${#authentication.name == reservation.user.username}">Anonymous</span>
                                     </td>
-                                    <td>
-                                        <!-- TODO: make a delete reservation button -->
+                                    <td th:if="${#authentication.name == reservation.user.username}">
+                                        <form th:action="@{/reservation/delete}" method="post">
+                                            <input type="hidden" name="reservationId" th:value="${reservation.id}">
+                                            <input type="hidden" name="parkId" th:value="${park.id}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
                                     </td>
+                                    <td th:unless="${#authentication.name == reservation.user.username}"></td>
                                 </tr>
                             </tbody>
                         </table>
