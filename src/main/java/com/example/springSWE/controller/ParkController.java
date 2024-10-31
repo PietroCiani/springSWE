@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Controller
 public class ParkController {
@@ -32,7 +34,7 @@ public class ParkController {
 	public String getAllReservationsForPark(@RequestParam("parkId") Long parkId, Model model) {
 		Park park = parkService.findParkById(parkId);
 
-		List<Reservation> reservations = reservationService.getAllReservationsByPark(parkId);
+		List<Reservation> reservations = reservationService.getFutureReservations(parkId, LocalDate.now(), LocalTime.now());
 
 		model.addAttribute("park", park);
 		model.addAttribute("reservations", reservations);

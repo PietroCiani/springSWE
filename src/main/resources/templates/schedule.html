@@ -22,6 +22,8 @@
                                     <th scope="col">Date</th>
                                     <th scope="col">Start Time</th>
                                     <th scope="col">End Time</th>
+                                    <th scope="col">Reserved By</th>
+                                    <th scope="col">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,6 +31,13 @@
                                     <td th:text="${reservation.date}"></td>
                                     <td th:text="${reservation.startTime}"></td>
                                     <td th:text="${reservation.endTime}"></td>
+                                    <td>
+                                        <span th:if="${#authentication.name == reservation.user.username}">You</span>
+                                        <span th:unless="${#authentication.name == reservation.user.username}">Anonymous</span>
+                                    </td>
+                                    <td>
+                                        <!-- TODO: make a delete reservation button -->
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -37,19 +46,20 @@
             </div>
 
             <div class="col-md-2">
-                <!-- FIXME: prevent users to reserve an already booked time -->
+                <!-- FIXME: prevent users to reserve an already booked time or make a reservation in the past -->
                 <form th:action="@{/reservation/create}" method="post">
                     <input type="hidden" name="parkId" th:value="${park.id}">
                     <div class="form-group mb-3">
-                        <!-- FIXME: default at today -->
                         <label for="date">Date:</label>
-                        <input type="date" class="form-control" id="date" name="date" required>
+                        <input type="date" class="form-control" id="date" name="date"
+                        th:value="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"
+                        th:min="${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}"
+                        required>
                     </div>
                     <div class="form-group mb-3">
                         <!-- TODO: add a "Next Available" button to select next available time -->
-                        <!-- FIXME: allow users to reserve only in minutes multiple of 5 (eg: xx:00, xx:05, xx:10, etc...) -->
                         <label for="startTime">Start Time:</label>
-                        <input type="time" class="form-control" id="startTime" name="startTime" required>
+                        <input type="time" class="form-control" id="startTime" name="startTime" step="300" required>
                     </div>
                      
                     <div class="form-group mb-3">
