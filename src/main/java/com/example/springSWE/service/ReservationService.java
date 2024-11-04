@@ -58,6 +58,11 @@ public class ReservationService {
         reservationRepository.deleteById(reservationID);
     }
 
+    public List<Reservation> findReservationsForParkAndDateWithinTimeRange(Long parkId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+        return reservationRepository.findByParkIdAndDateAndStartTimeLessThanAndEndTimeGreaterThan(
+                parkId, date, endTime, startTime);
+    }
+    
 
 	/*
     public static List<int[]> findAvailableSlots(List<int[]> transReservations, int maxTime) {

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.security.Principal;
 
@@ -52,11 +53,26 @@ public class ReservationController {
 							Principal principal,
 							RedirectAttributes redirectAttributes) {
 		try {
+			// prevent reservations in the past
+			LocalDateTime reservationDateTime = LocalDateTime.of(date, startTime);
+			if (reservationDateTime.isBefore(LocalDateTime.now())) {
+				redirectAttributes.addFlashAttribute("error", "Cannot book a reservation in the past.");
+				return "redirect:/schedule?parkId=" + parkId;
+			}
+
 			Park park = parkService.findParkById(parkId);
 			User user = userService.getUserByUsername(principal.getName());
 			Reservation reservation = new Reservation(date, startTime, durationInMinutes, user, park);
 
-			// TODO: Add validation logic here to check for overlapping reservations
+			// Check for overlapping reservations
+			LocalTime endTime = startTime.plusMinutes(durationInMinutes);
+			List<Reservation> overlappingReservations = reservationService
+					.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, endTime);
+	
+			if (!overlappingReservations.isEmpty()) {
+				redirectAttributes.addFlashAttribute("error", "Selected time is already booked.");
+				return "redirect:/schedule?parkId=" + parkId;
+			}
 			
 			reservationService.saveReservation(reservation);
 			redirectAttributes.addFlashAttribute("success", "Reservation successfully created!");
@@ -65,7 +81,7 @@ public class ReservationController {
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", 
             "Could not create reservation: " + e.getMessage());
-        	return "redirect:/reservation/schedule?parkId=" + parkId;
+        	return "redirect:/schedule?parkId=" + parkId;
 		}
 	}
 

@@ -8,6 +8,15 @@
     <div th:replace="~{base :: navbar}"></div>
 
     <div class="container my-4">
+
+        <!-- flash messages section -->
+		<div th:if="${success}" class="alert alert-success" role="alert">
+			<span th:text="${success}"></span>
+		</div>
+		<div th:if="${error}" class="alert alert-danger" role="alert">
+			<span th:text="${error}"></span>
+		</div>
+		
         <div class="row justify-content-center">
 			<h2 class="text-center mb-4">My reservations</h2>
             <div class="card col-md-10 mb-4">
