@@ -26,6 +26,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         @Param("date") LocalDate date, @Param("startTime") LocalTime startTime
     );
 
-    List<Reservation> findByUserAndDateAndStartTimeAfter(User userId, LocalDate date, LocalTime startTime);
-    
+    @Query("SELECT r FROM Reservation r WHERE r.user = :user AND r.date >= :date AND r.startTime >= :startTime")
+    List<Reservation> findByUserAndDateAndStartTimeAfter(@Param("user") User user, @Param("date") LocalDate date, @Param("startTime") LocalTime startTime);
+            
 }

@@ -44,7 +44,9 @@ public class ReservationService {
 	}
 
     public List<Reservation> getFutureReservationsByUser(User user) {
-        return reservationRepository.findByUserAndDateAndStartTimeAfter(user, LocalDate.now(), LocalTime.now());
+        List<Reservation> reservations = reservationRepository.findByUserAndDateAndStartTimeAfter(user, LocalDate.now(), LocalTime.now());
+        reservations.sort(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime));
+        return reservations;
     }
 
     public Optional<Reservation> getOngoingReservation(Long parkID, LocalDate date, LocalTime startTime) {

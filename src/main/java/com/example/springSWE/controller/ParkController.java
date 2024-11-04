@@ -40,11 +40,4 @@ public class ParkController {
 		model.addAttribute("reservations", reservations);
 		return "schedule";
 	}
-	/*
-	public String viewParkSchedule(@RequestParam("parkId") Long parkId,
-								   @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-								   Model model) {
-        Park park = parkService.findParkById(parkId);
-    }*/
-
 }

@@ -51,7 +51,6 @@
             </div>
 
             <div class="col-md-2">
-                <!-- FIXME: prevent users to reserve an already booked time or make a reservation in the past -->
                 <form th:action="@{/reservation/create}" method="post">
                     <input type="hidden" name="parkId" th:value="${park.id}">
                     <div class="form-group mb-3">
@@ -62,7 +61,6 @@
                         required>
                     </div>
                     <div class="form-group mb-3">
-                        <!-- TODO: add a "Next Available" button to select next available time -->
                         <label for="startTime">Start Time:</label>
                         <input type="time" class="form-control" id="startTime" name="startTime" step="300" required>
                     </div>

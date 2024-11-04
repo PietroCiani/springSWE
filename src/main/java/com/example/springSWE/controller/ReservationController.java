@@ -36,11 +36,14 @@ public class ReservationController {
 	public String showReservations(Principal principal, Model model) {
 		User user = userService.getUserByUsername(principal.getName());
 		List<Reservation> reservations = reservationService.getFutureReservationsByUser(user);
+		List<Park> parks = parkService.findAllParks();
 		model.addAttribute("reservations", reservations);
+		model.addAttribute("parks", parks);
 
 		return "reservations";
 	}
 
+	// FIXME: prevent users to reserve an already booked time or make a reservation in the past
 	@PostMapping("/reservation/create")
 	public String createReservation(@RequestParam("parkId") Long parkId,
 							@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -57,7 +60,7 @@ public class ReservationController {
 			
 			reservationService.saveReservation(reservation);
 			redirectAttributes.addFlashAttribute("success", "Reservation successfully created!");
-			return "redirect:/parks";
+			return "redirect:/reservations";
 
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", 
@@ -68,16 +71,15 @@ public class ReservationController {
 
 	@PostMapping("/reservation/delete")
 	public String deleteReservation(@RequestParam("reservationId") Long reservationId,
-									@RequestParam("parkId") Long parkId,
 									RedirectAttributes redirectAttributes) {
 		try {
 			reservationService.deleteReservation(reservationId);
 			redirectAttributes.addFlashAttribute("success", "Reservation successfully deleted!");
-			return "redirect:/schedule?parkId=" + parkId;
+			return "redirect:/reservations";
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", 
 			"Could not delete reservation: " + e.getMessage());
-			return "redirect:/schedule?parkId=" + parkId;
+			return "redirect:/reservations";
 		}
 	}
 
