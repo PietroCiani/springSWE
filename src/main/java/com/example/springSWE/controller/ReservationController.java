@@ -44,7 +44,6 @@ public class ReservationController {
 		return "reservations";
 	}
 
-	// FIXME: prevent users to reserve an already booked time or make a reservation in the past
 	@PostMapping("/reservation/create")
 	public String createReservation(@RequestParam("parkId") Long parkId,
 							@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -64,7 +63,7 @@ public class ReservationController {
 			User user = userService.getUserByUsername(principal.getName());
 			Reservation reservation = new Reservation(date, startTime, durationInMinutes, user, park);
 
-			// Check for overlapping reservations
+			// check for overlapping reservations
 			LocalTime endTime = startTime.plusMinutes(durationInMinutes);
 			List<Reservation> overlappingReservations = reservationService
 					.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, endTime);

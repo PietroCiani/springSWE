@@ -13,7 +13,7 @@ import java.time.LocalTime;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByParkId(Long parkId);
-    List<Reservation> findByUserId(Long userId);
+    List<Reservation> findByUserId(int userId);
     List<Reservation> findByParkIdAndDate(Long parkId, LocalDate date);
     List<Reservation> findByParkIdAndDateAndStartTimeAfter(
         @Param("parkId") Long parkId,
@@ -34,5 +34,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByParkIdAndDateAndStartTimeLessThanAndEndTimeGreaterThan(
         Long parkId, LocalDate date, LocalTime endTime, LocalTime startTime
     );
-    
+
 }

@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.Comparator;
 
 @Service
@@ -21,14 +22,18 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}	
 
-	public List<Reservation> getFutureReservations(Long parkID, LocalDate date, LocalTime startTime) {
-        List<Reservation> reservations = reservationRepository.findByParkIdAndDateAndStartTimeAfter(parkID, date, startTime);
-        
-        Optional<Reservation> ongoing = getOngoingReservation(parkID, LocalDate.now(), LocalTime.now());
-        ongoing.ifPresent(reservations::add);
-        
-        reservations.sort(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime));
-        
+	public List<Reservation> getFutureReservations(Long parkID) {
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        List<Reservation> reservations = reservationRepository.findByParkId(parkID)
+        .stream()
+        .filter(reservation -> 
+            reservation.getDate().isAfter(today) || 
+            (reservation.getDate().isEqual(today) && reservation.getStartTime().isAfter(now))
+        )
+        .sorted(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime))
+        .collect(Collectors.toList());
         return reservations;
     }
     
@@ -44,8 +49,17 @@ public class ReservationService {
 	}
 
     public List<Reservation> getFutureReservationsByUser(User user) {
-        List<Reservation> reservations = reservationRepository.findByUserAndDateAndStartTimeAfter(user, LocalDate.now(), LocalTime.now());
-        reservations.sort(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime));
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        List<Reservation> reservations = reservationRepository.findByUserId(user.getId())
+        .stream()
+        .filter(reservation -> 
+            reservation.getDate().isAfter(today) || 
+            (reservation.getDate().isEqual(today) && reservation.getStartTime().isAfter(now))
+        )
+        .sorted(Comparator.comparing(Reservation::getDate).thenComparing(Reservation::getStartTime))
+        .collect(Collectors.toList());
         return reservations;
     }
 

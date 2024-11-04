@@ -34,7 +34,7 @@ public class ParkController {
 	public String getAllReservationsForPark(@RequestParam("parkId") Long parkId, Model model) {
 		Park park = parkService.findParkById(parkId);
 
-		List<Reservation> reservations = reservationService.getFutureReservations(parkId, LocalDate.now(), LocalTime.now());
+		List<Reservation> reservations = reservationService.getFutureReservations(parkId);
 
 		model.addAttribute("park", park);
 		model.addAttribute("reservations", reservations);
