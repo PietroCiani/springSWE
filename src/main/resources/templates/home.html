@@ -10,20 +10,40 @@
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <div sec:authorize="isAuthenticated()">
-                            <h2 class="card-title text-center mb-4">Welcome [[${#authentication.name}]]!</h2>
+                <div class="container mt-4" sec:authorize="isAuthenticated()">
+                    <h2 class="text-center mb-4">Welcome [[${#authentication.name}]]!</h2>
+                    <div class="row justify-content-center">
+                        <div class="col-md-auto">
+                            <a th:href="@{/parks}">
+                                <div class="card" style="width: 25rem;">
+                                    <img class="card-img-top" style="width: 25rem; height: 16rem;" src="https://cdn.pixabay.com/photo/2021/09/08/18/36/park-bench-6607626_640.jpg" alt="Park image">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">Parks</h5>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
-                        
-                        <div sec:authorize="isAnonymous()">
-                            <h2 class="card-title text-center mb-4">Welcome to SpringApp!</h2>
-                            <p class="text-center">Please <a th:href="@{/login}">log in</a> or <a th:href="@{/signup}">sign up</a> to continue.</p>
-                            <div class="d-grid gap-2 col-6 mx-auto">
-                                <a class="btn btn-primary" th:href="@{/login}">Login</a>
-                                <a class="btn btn-outline-primary" th:href="@{/signup}">Sign Up</a>
-                            </div>
+                        <div class="col-md-auto">
+                            <a th:href="@{/reservations}">
+                                <div class="card" style="width: 25rem;">
+                                    <img class="card-img-top" style="width: 25rem; height: 16rem;" src="https://blog.rescuetime.com/wp-content/uploads/2019/06/Calendar-writing-reminders-time-blocking-min.jpg" alt="Card image cap">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center">My Reservations</h5>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
+                    </div>
+                </div>
+                
+                <div sec:authorize="isAnonymous()">
+                    <h2 class="text-center mb-4">Welcome to BarkPark</h2>
+                    <p class="text-center">No more surprises at the park!</p>
+                    <p class="text-center">Join our community to reserve a spot for your furry friend.</p>
+                    <p class="text-center">Please <a th:href="@{/login}">log in</a> or <a th:href="@{/signup}">sign up</a> to continue.</p>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <a class="btn btn-primary" th:href="@{/login}">Login</a>
+                        <a class="btn btn-outline-primary" th:href="@{/signup}">Sign Up</a>
                     </div>
                 </div>
             </div>

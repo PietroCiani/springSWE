@@ -12,15 +12,15 @@
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <!-- iterate over parks -->
                 <div class="col" th:each="park : ${parks}">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${park.name}">Park Name</h5>
-                            <p class="card-text" th:text="${park.address}">Park Address</p>
+                    <a th:href="@{/schedule(parkId=${park.id})}">
+                        <div class="card h-100">
+                            <img class="card-img-top" src="https://cdn.pixabay.com/photo/2021/09/08/18/36/park-bench-6607626_640.jpg" alt="Park image">
+                            <div class="card-body">
+                                <h5 class="card-title text-center" th:text="${park.name}">Park Name</h5>
+                                <p class="card-text text-center" th:text="${park.address}">Park Address</p>
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <a th:href="@{/schedule(parkId=${park.id})}" class="btn btn-primary">Reserve</a>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>

@@ -10,9 +10,27 @@
     <div class="container my-4">
         <div class="row justify-content-center">
             <h2 class="text-center mb-4" th:text="${park.name}"></h2>
-            <div class="card col-md-10 mb-4">
+            <div class="col-md-2">
+                <div class="mb-3">
+                    <h5>Schedule</h5>
+                    <span th:if="${park.openingTime == park.closingTime}">24h</span>
+                    <span th:unless="${park.openingTime == park.closingTime}">
+                        <p>Mon-Fri:</p>
+                        <p th:text="${park.openingTime}"></p> - <p th:text="${park.closingTime}"></p>
+                        <p>Sat-Sun:</p>
+                        <p th:text="${park.openingTime}"></p> - <p th:text="${park.closingTime}"></p>
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <h5>Address</h5>
+                    <a th:href="'https://www.google.com/maps/place/' + ${#strings.replace(park.address, ' ', '+')}" target="_blank">
+                        <p th:text="${park.address}">Missing address</p>
+                    </a>
+                </div>
+            </div>
+            <div class="card col-md-8 mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">Schedule</h5>
+                    <h5 class="card-title mb-0">Bookings</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

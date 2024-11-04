@@ -1,5 +1,7 @@
 package com.example.springSWE.model;
 
+import java.time.LocalTime;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,12 +19,18 @@ public class Park {
 
 	private String address;
 
+	private LocalTime openingTime;
+
+	private LocalTime closingTime;
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", openingTime=" + openingTime +
+				", closingTime=" + closingTime +
                 '}';
     }
 }
