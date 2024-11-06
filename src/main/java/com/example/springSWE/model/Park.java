@@ -33,4 +33,10 @@ public class Park {
 				", closingTime=" + closingTime +
                 '}';
     }
+
+    public Boolean isOpen(LocalTime time) {
+        Boolean status = time.isAfter(openingTime) && time.isBefore(closingTime);
+        status = status || time.equals(openingTime) || time.equals(closingTime);
+        return status;
+    }
 }

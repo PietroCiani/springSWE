@@ -72,6 +72,12 @@ public class ReservationController {
 				redirectAttributes.addFlashAttribute("error", "Selected time is already booked.");
 				return "redirect:/schedule?parkId=" + parkId;
 			}
+
+			// prevent closed park reservations
+			if (!park.isOpen(startTime) || !park.isOpen(endTime)) {
+				redirectAttributes.addFlashAttribute("error", "Park is closed at selected time.");
+				return "redirect:/schedule?parkId=" + parkId;
+			}
 			
 			reservationService.saveReservation(reservation);
 			redirectAttributes.addFlashAttribute("success", "Reservation successfully created!");
