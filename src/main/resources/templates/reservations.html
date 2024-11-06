@@ -55,9 +55,12 @@
 			</div>
 			<div class="col-md-2">
                 <form th:action="@{/reservation/create}" method="post">
-					<select class="form-control" id="parkId" name="parkId" required>
-						<option th:each="park : ${parks}" th:value="${park.id}">[[${park.name}]]</option>
-					</select>
+					<div class="form-group mb-3">
+						<label for="parkId">Park:</label>
+						<select class="form-control" id="parkId" name="parkId" required>
+							<option th:each="park : ${parks}" th:value="${park.id}">[[${park.name}]]</option>
+						</select>
+					</div>
                     <div class="form-group mb-3">
                         <label for="date">Date:</label>
                         <input type="date" class="form-control" id="date" name="date"
