@@ -36,7 +36,21 @@ public class ReservationService {
         .collect(Collectors.toList());
         return reservations;
     }
-    
+
+    public boolean hasConcurrentReservation(User user, LocalDate date, LocalTime startTime, int durationInMinutes) {
+        List<Reservation> userReservations = reservationRepository.findByUserAndDate(user, date);
+        for (Reservation existingReservation : userReservations) {
+            LocalTime existingStartTime = existingReservation.getStartTime();
+            LocalTime existingEndTime = existingReservation.getEndTime();
+            LocalTime newEndTime = startTime.plusMinutes(durationInMinutes);
+            if ((startTime.isBefore(existingEndTime) && newEndTime.isAfter(existingStartTime)) ||
+                startTime.equals(existingStartTime)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 	public List<Reservation> getReservationsByParkAndDate(Long parkID, LocalDate date) {
 		return reservationRepository.findByParkIdAndDate(parkID, date);

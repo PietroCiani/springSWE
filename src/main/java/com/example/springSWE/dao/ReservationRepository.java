@@ -14,6 +14,7 @@ import java.time.LocalTime;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByParkId(Long parkId);
     List<Reservation> findByUserId(int userId);
+    List<Reservation> findByUserAndDate(User user, LocalDate date);
     List<Reservation> findByParkIdAndDate(Long parkId, LocalDate date);
     List<Reservation> findByParkIdAndDateAndStartTimeAfter(
         @Param("parkId") Long parkId,

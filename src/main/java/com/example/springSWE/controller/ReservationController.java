@@ -7,6 +7,8 @@ import com.example.springSWE.service.ParkService;
 import com.example.springSWE.service.ReservationService;
 import com.example.springSWE.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.ui.Model;
 
 import java.util.List;
@@ -49,21 +51,23 @@ public class ReservationController {
 							@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
 							@RequestParam("startTime") @DateTimeFormat(pattern = "HH:mm") LocalTime startTime,
 							@RequestParam("duration") int durationInMinutes,
-							Principal principal,
-							RedirectAttributes redirectAttributes) {
+							Principal principal, RedirectAttributes redirectAttributes,
+							HttpServletRequest request) {
+		
+		String referer = request.getHeader("Referer");
 		try {
 			// prevent reservations in the past
 			LocalDateTime reservationDateTime = LocalDateTime.of(date, startTime);
 			if (reservationDateTime.isBefore(LocalDateTime.now())) {
 				redirectAttributes.addFlashAttribute("error", "Cannot book a reservation in the past.");
-				return "redirect:/schedule?parkId=" + parkId;
+				return "redirect:" + (referer != null ? referer : "/");
 			}
 
 			Park park = parkService.findParkById(parkId);
 			User user = userService.getUserByUsername(principal.getName());
 			Reservation reservation = new Reservation(date, startTime, durationInMinutes, user, park);
 
-			// check for overlapping reservations
+			// check for overlapping park reservations
 			LocalTime endTime = startTime.plusMinutes(durationInMinutes);
 			List<Reservation> overlappingReservations = reservationService
 					.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, endTime);
@@ -72,6 +76,12 @@ public class ReservationController {
 				redirectAttributes.addFlashAttribute("error", "Selected time is already booked.");
 				return "redirect:/schedule?parkId=" + parkId;
 			}
+
+			// check for overlapping user reservations
+			if (reservationService.hasConcurrentReservation(user, date, startTime, durationInMinutes)) {
+				redirectAttributes.addFlashAttribute("error", "You already have a reservation at this time.");
+				return "redirect:/reservations";
+			}	
 
 			// prevent closed park reservations
 			if (!park.isOpen(startTime) || !park.isOpen(endTime)) {
