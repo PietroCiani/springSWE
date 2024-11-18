@@ -90,35 +90,4 @@ public class ReservationService {
         return reservationRepository.findByParkIdAndDateAndStartTimeLessThanAndEndTimeGreaterThan(
                 parkId, date, endTime, startTime);
     }
-    
-
-	/*
-    public static List<int[]> findAvailableSlots(List<int[]> transReservations, int maxTime) {
-        // sort reservations by start time
-		Collections.sort(transReservations, (a, b) -> Integer.compare(a[0], b[0]));
-		List<int[]> availableSlots = new ArrayList<>();
-		// 0 -> first
-        if (transReservations.isEmpty() || transReservations.get(0)[0] > 0) {
-            availableSlots.add(new int[]{0, transReservations.isEmpty() ? maxTime : transReservations.get(0)[0]});
-        }
-		// between reservations
-        for (int i = 0; i < transReservations.size(); i++) {
-            int currentEnd = transReservations.get(i)[1];
-            int nextStart = (i == transReservations.size() - 1) ? 
-                maxTime : transReservations.get(i + 1)[0];
-                
-            if (currentEnd < nextStart) {
-                availableSlots.add(new int[]{currentEnd, nextStart});
-            }
-        }
-        // last -> maxTime
-        if (!transReservations.isEmpty() && 
-            transReservations.get(transReservations.size() - 1)[1] < maxTime) {
-            availableSlots.add(new int[]{
-                transReservations.get(transReservations.size() - 1)[1], 
-                maxTime
-            });
-        }
-        return availableSlots;
-    }*/
 }
