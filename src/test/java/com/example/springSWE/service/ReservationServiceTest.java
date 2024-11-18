@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.Test;
@@ -156,5 +157,12 @@ public class ReservationServiceTest {
 	
 	private boolean reservationsOverlap(Reservation r1, Reservation r2) {
 		return !r1.getEndTime().isBefore(r2.getStartTime()) && !r1.getStartTime().isAfter(r2.getEndTime());
+	}
+
+	@AfterAll
+	public void tearDown() {
+		reservationRepository.deleteAll();
+		userRepository.deleteAll();
+		parkRepository.deleteAll();
 	}
 }
