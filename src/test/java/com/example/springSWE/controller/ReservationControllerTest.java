@@ -26,7 +26,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 
 class ReservationControllerTest {
