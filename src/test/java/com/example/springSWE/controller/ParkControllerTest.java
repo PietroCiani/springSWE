@@ -56,13 +56,14 @@ class ParkControllerTest {
         Park park = new Park();
         List<Reservation> reservations = Arrays.asList(new Reservation(), new Reservation());
         
+		// mockito when() used to mock the behavior of parkService.findParkById()
         when(parkService.findParkById(parkId)).thenReturn(park);
         when(reservationService.getFutureReservations(parkId)).thenReturn(reservations);
 
         String viewName = parkController.getAllReservationsForPark(parkId, model);
 
         assertEquals("schedule", viewName);
-        verify(parkService).findParkById(parkId);
+        verify(parkService).findParkById(parkId); // mockito verify that the findParkById method was called with the correct parkId
         verify(reservationService).getFutureReservations(parkId);
         verify(model).addAttribute("park", park);
         verify(model).addAttribute("reservations", reservations);
