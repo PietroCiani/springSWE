@@ -138,7 +138,6 @@ class ReservationControllerTest {
         assertEquals("Cannot book a reservation in the past.", redirectAttributes.getFlashAttributes().get("error"));
     }
 
-
     @Test
     void testCreateReservationOverlappingParkReservation() {
         Long parkId = 1L;
@@ -157,6 +156,52 @@ class ReservationControllerTest {
         assertEquals("Selected time is already booked.", redirectAttributes.getFlashAttributes().get("error"));
     }
 
+    @Test
+    void testCreateReservationOverlappingUserReservation() {
+        Long parkId = 1L;
+        LocalDate date = LocalDate.now().plusDays(1);
+        LocalTime startTime = LocalTime.of(10, 0);
+        int duration = 10;
+        User user = new User();
+        when(principal.getName()).thenReturn("testUser");
+        when(userService.getUserByUsername("testUser")).thenReturn(user);
+        when(reservationService.hasConcurrentReservation(user, date, startTime, duration)).thenReturn(true);
+
+        String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
+
+        assertEquals("redirect:/reservations", viewName);
+        assertEquals("You already have a reservation at this time.", redirectAttributes.getFlashAttributes().get("error"));
+    }
+
+    @Test
+    void testCreateReservationParkClosed() {
+        Long parkId = 1L;
+        LocalDate date = LocalDate.now().plusDays(1);
+        LocalTime startTime = LocalTime.of(23, 30);
+        int duration = 30;
+        Park park = mock(Park.class);
+        when(parkService.findParkById(parkId)).thenReturn(park);
+        when(park.isOpen(startTime)).thenReturn(false);
+
+        String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
+
+        assertEquals("redirect:/schedule?parkId=" + parkId, viewName);
+        assertEquals("Park is closed at selected time.", redirectAttributes.getFlashAttributes().get("error"));
+    }
+
+    @Test
+    void testCreateReservationException() {
+        Long parkId = 1L;
+        LocalDate date = LocalDate.now().plusDays(1);
+        LocalTime startTime = LocalTime.of(10, 0);
+        int duration = 30;
+        when(parkService.findParkById(parkId)).thenThrow(new RuntimeException("Park not found"));
+
+        String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
+
+        assertEquals("redirect:/schedule?parkId=" + parkId, viewName);
+        assertTrue(redirectAttributes.getFlashAttributes().get("error").toString().contains("Could not create reservation: Park not found"));
+    }
 
     @Test
     void testDeleteReservationSuccess() {
