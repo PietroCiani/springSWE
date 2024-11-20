@@ -1,5 +1,6 @@
 package com.example.springSWE.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,6 +10,8 @@ import com.example.springSWE.model.User;
 import com.example.springSWE.service.ParkService;
 import com.example.springSWE.service.ReservationService;
 import com.example.springSWE.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +45,10 @@ class ReservationControllerTest {
 
     @Mock
     private Principal principal;
+
+    @Mock
+    private HttpServletRequest request;
+
 
     private RedirectAttributes redirectAttributes;
 
@@ -87,6 +94,67 @@ class ReservationControllerTest {
         assertEquals(reservations, model.getAttribute("reservations"));
         assertEquals(parks, model.getAttribute("parks"));
         assertEquals("reservations", viewName);
+    }
+
+    @Test
+    void testCreateReservationSuccess() {
+        Long parkId = 1L;
+        LocalDate date = LocalDate.now().plusDays(1);
+        LocalTime startTime = LocalTime.of(10, 0);
+        int duration = 15;
+        User user = new User();
+        user.setUsername("testUser");
+        Park park = mock(Park.class);
+    
+        //mock behaviors
+        when(principal.getName()).thenReturn("testUser");
+        when(userService.getUserByUsername("testUser")).thenReturn(user);
+        when(parkService.findParkById(parkId)).thenReturn(park);
+        when(park.isOpen(startTime)).thenReturn(true);
+        when(park.isOpen(startTime.plusMinutes(duration))).thenReturn(true);
+        when(reservationService.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, startTime.plusMinutes(duration)))
+                .thenReturn(List.of());
+        when(reservationService.hasConcurrentReservation(user, date, startTime, duration)).thenReturn(false);
+        when(request.getHeader("Referer")).thenReturn("/previous");
+    
+        String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
+    
+        verify(reservationService).saveReservation(any(Reservation.class)); //ensure saveReservation is called
+        assertEquals("redirect:/reservations", viewName);
+        assertEquals("Reservation successfully created!", redirectAttributes.getFlashAttributes().get("success"));
+    }
+    
+    @Test
+    void testCreateReservationInPast() {
+        Long parkId = 1L;
+        LocalDate date = LocalDate.now().minusDays(1); //date in the past
+        LocalTime startTime = LocalTime.of(10, 0);
+        when(request.getHeader("Referer")).thenReturn("/previous");
+
+        String viewName = reservationController.createReservation(parkId, date, startTime, 10, principal, redirectAttributes, request);
+
+        //expect failing
+        assertEquals("redirect:/previous", viewName);
+        assertEquals("Cannot book a reservation in the past.", redirectAttributes.getFlashAttributes().get("error"));
+    }
+
+
+    @Test
+    void testCreateReservationOverlappingParkReservation() {
+        Long parkId = 1L;
+        LocalDate date = LocalDate.now().plusDays(1);
+        LocalTime startTime = LocalTime.of(10, 0);
+        int duration = 20;
+        when(parkService.findParkById(parkId)).thenReturn(new Park());
+        when(reservationService.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, startTime.plusMinutes(duration)))
+                .thenReturn(List.of(new Reservation()));
+        when(request.getHeader("Referer")).thenReturn(null);
+
+        String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
+
+        //expect failing
+        assertEquals("redirect:/schedule?parkId=" + parkId, viewName);
+        assertEquals("Selected time is already booked.", redirectAttributes.getFlashAttributes().get("error"));
     }
 
 
