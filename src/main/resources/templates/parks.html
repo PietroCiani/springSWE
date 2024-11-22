@@ -14,7 +14,7 @@
                 <div class="col" th:each="park : ${parks}">
                     <a th:href="@{/schedule(parkId=${park.id})}">
                         <div class="card h-100">
-                            <img class="card-img-top" src="https://cdn.pixabay.com/photo/2021/09/08/18/36/park-bench-6607626_640.jpg" alt="Park image">
+                            <img class="card-img-top" src="https://berkeleyca.gov/sites/default/files/2022-01/park-placeholder.png" alt="Park image">
                             <div class="card-body">
                                 <h5 class="card-title text-center" th:text="${park.name}">Park Name</h5>
                                 <p class="card-text text-center" th:text="${park.address}">Park Address</p>
