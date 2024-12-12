@@ -48,57 +48,67 @@ public class ReservationController {
 
 	@PostMapping("/reservation/create")
 	public String createReservation(@RequestParam("parkId") Long parkId,
-							@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
-							@RequestParam("startTime") @DateTimeFormat(pattern = "HH:mm") LocalTime startTime,
-							@RequestParam("duration") int durationInMinutes,
-							Principal principal, RedirectAttributes redirectAttributes,
-							HttpServletRequest request) {
-		
+									@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+									@RequestParam("startTime") @DateTimeFormat(pattern = "HH:mm") LocalTime startTime,
+									@RequestParam("duration") int durationInMinutes,
+									Principal principal, RedirectAttributes redirectAttributes,
+									HttpServletRequest request) {
+
 		String referer = request.getHeader("Referer");
 		try {
-			// prevent reservations in the past
+			// Preparare gli oggetti principali
+			User user = userService.getUserByUsername(principal.getName());
+			Park park = parkService.findParkById(parkId);
 			LocalDateTime reservationDateTime = LocalDateTime.of(date, startTime);
-			if (reservationDateTime.isBefore(LocalDateTime.now())) {
-				redirectAttributes.addFlashAttribute("error", "Cannot book a reservation in the past.");
+			LocalTime endTime = startTime.plusMinutes(durationInMinutes);
+
+			// Eseguire le verifiche
+			String validationError = validateReservation(parkId, date, startTime, endTime, park, user,
+			reservationDateTime, durationInMinutes);
+			if (validationError != null) {
+				redirectAttributes.addFlashAttribute("error", validationError);
 				return "redirect:" + (referer != null ? referer : "/");
 			}
 
-			Park park = parkService.findParkById(parkId);
-			User user = userService.getUserByUsername(principal.getName());
+			// Creare e salvare la prenotazione
 			Reservation reservation = new Reservation(date, startTime, durationInMinutes, user, park);
-
-			// check for overlapping park reservations
-			LocalTime endTime = startTime.plusMinutes(durationInMinutes);
-			List<Reservation> overlappingReservations = reservationService
-					.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, endTime);
-	
-			if (!overlappingReservations.isEmpty()) {
-				redirectAttributes.addFlashAttribute("error", "Selected time is already booked.");
-				return "redirect:/schedule?parkId=" + parkId;
-			}
-
-			// check for overlapping user reservations
-			if (reservationService.hasConcurrentReservation(user, date, startTime, durationInMinutes)) {
-				redirectAttributes.addFlashAttribute("error", "You already have a reservation at this time.");
-				return "redirect:/reservations";
-			}	
-
-			// prevent closed park reservations
-			if (!park.isOpen(startTime) || !park.isOpen(endTime)) {
-				redirectAttributes.addFlashAttribute("error", "Park is closed at selected time.");
-				return "redirect:/schedule?parkId=" + parkId;
-			}
-			
 			reservationService.saveReservation(reservation);
 			redirectAttributes.addFlashAttribute("success", "Reservation successfully created!");
 			return "redirect:/reservations";
 
 		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("error", 
-            "Could not create reservation: " + e.getMessage());
-        	return "redirect:/schedule?parkId=" + parkId;
+			redirectAttributes.addFlashAttribute("error", "Could not create reservation: " + e.getMessage());
+			return "redirect:" + (referer != null ? referer : "/");
 		}
 	}
+
+	private String validateReservation(Long parkId, LocalDate date, LocalTime startTime, LocalTime endTime, 
+                                   Park park, User user, LocalDateTime reservationDateTime, int durationInMinutes) {
+		// Verifica per prenotazioni nel passato
+		if (reservationDateTime.isBefore(LocalDateTime.now())) {
+			return "Cannot book a reservation in the past.";
+		}
+
+		// Verifica per orari sovrapposti con altre prenotazioni nel parco
+		List<Reservation> overlappingReservations = reservationService
+				.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, endTime);
+		if (!overlappingReservations.isEmpty()) {
+			return "Selected time is already booked.";
+		}
+
+		// Verifica per sovrapposizioni con altre prenotazioni dell'utente
+		if (reservationService.hasConcurrentReservation(user, date, startTime, durationInMinutes)) {
+			return "You already have a reservation at this time.";
+		}
+
+		// Verifica per orari di chiusura del parco
+		if (!park.isOpen(startTime) || !park.isOpen(endTime)) {
+			return "Park is closed at selected time.";
+		}
+
+		return null; // Nessun errore trovato
+	}
+
 
 	@PostMapping("/reservation/delete")
 	public String deleteReservation(@RequestParam("reservationId") Long reservationId,

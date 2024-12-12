@@ -151,7 +151,7 @@ class ReservationControllerTest {
         String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
 
         //expect failing
-        assertEquals("redirect:/schedule?parkId=" + parkId, viewName);
+        assertEquals("redirect:/", viewName);
         assertEquals("Selected time is already booked.", redirectAttributes.getFlashAttributes().get("error"));
     }
 
@@ -168,7 +168,7 @@ class ReservationControllerTest {
 
         String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
 
-        assertEquals("redirect:/reservations", viewName);
+        assertEquals("redirect:/", viewName);
         assertEquals("You already have a reservation at this time.", redirectAttributes.getFlashAttributes().get("error"));
     }
 
@@ -184,7 +184,7 @@ class ReservationControllerTest {
 
         String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
 
-        assertEquals("redirect:/schedule?parkId=" + parkId, viewName);
+        assertEquals("redirect:/", viewName);
         assertEquals("Park is closed at selected time.", redirectAttributes.getFlashAttributes().get("error"));
     }
 
@@ -198,7 +198,7 @@ class ReservationControllerTest {
 
         String viewName = reservationController.createReservation(parkId, date, startTime, duration, principal, redirectAttributes, request);
 
-        assertEquals("redirect:/schedule?parkId=" + parkId, viewName);
+        assertEquals("redirect:/", viewName);
         assertTrue(redirectAttributes.getFlashAttributes().get("error").toString().contains("Could not create reservation: Park not found"));
     }
 
