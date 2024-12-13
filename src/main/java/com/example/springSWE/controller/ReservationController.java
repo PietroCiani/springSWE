@@ -56,13 +56,12 @@ public class ReservationController {
 
 		String referer = request.getHeader("Referer");
 		try {
-			// Preparare gli oggetti principali
 			User user = userService.getUserByUsername(principal.getName());
 			Park park = parkService.findParkById(parkId);
 			LocalDateTime reservationDateTime = LocalDateTime.of(date, startTime);
 			LocalTime endTime = startTime.plusMinutes(durationInMinutes);
 
-			// Eseguire le verifiche
+			// Validate
 			String validationError = validateReservation(parkId, date, startTime, endTime, park, user,
 			reservationDateTime, durationInMinutes);
 			if (validationError != null) {
@@ -70,7 +69,6 @@ public class ReservationController {
 				return "redirect:" + (referer != null ? referer : "/");
 			}
 
-			// Creare e salvare la prenotazione
 			Reservation reservation = new Reservation(date, startTime, durationInMinutes, user, park);
 			reservationService.saveReservation(reservation);
 			redirectAttributes.addFlashAttribute("success", "Reservation successfully created!");
@@ -84,29 +82,29 @@ public class ReservationController {
 
 	private String validateReservation(Long parkId, LocalDate date, LocalTime startTime, LocalTime endTime, 
                                    Park park, User user, LocalDateTime reservationDateTime, int durationInMinutes) {
-		// Verifica per prenotazioni nel passato
+		// check for past reservation
 		if (reservationDateTime.isBefore(LocalDateTime.now())) {
 			return "Cannot book a reservation in the past.";
 		}
 
-		// Verifica per orari sovrapposti con altre prenotazioni nel parco
+		// check for overlapping reservations in park
 		List<Reservation> overlappingReservations = reservationService
 				.findReservationsForParkAndDateWithinTimeRange(parkId, date, startTime, endTime);
 		if (!overlappingReservations.isEmpty()) {
 			return "Selected time is already booked.";
 		}
 
-		// Verifica per sovrapposizioni con altre prenotazioni dell'utente
+		// check for overlapping reservations in user
 		if (reservationService.hasConcurrentReservation(user, date, startTime, durationInMinutes)) {
 			return "You already have a reservation at this time.";
 		}
 
-		// Verifica per orari di chiusura del parco
+		// check for park opening hours
 		if (!park.isOpen(startTime) || !park.isOpen(endTime)) {
 			return "Park is closed at selected time.";
 		}
 
-		return null; // Nessun errore trovato
+		return null; // no errors found
 	}
 
 
