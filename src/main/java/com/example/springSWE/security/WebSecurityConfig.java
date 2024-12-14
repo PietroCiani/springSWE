@@ -8,8 +8,6 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.example.springSWE.service.CustomUserDetailsService;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {

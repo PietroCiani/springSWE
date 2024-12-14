@@ -1,4 +1,4 @@
-package com.example.springSWE.service;
+package com.example.springSWE.security;
 
 import com.example.springSWE.dao.UserRepository;
 import com.example.springSWE.model.User;
